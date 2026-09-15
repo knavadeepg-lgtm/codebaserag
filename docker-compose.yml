@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  codelens:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: codelens-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - EMBEDDING_MODEL=text-embedding-004
+      - LLM_MODEL=gemini-2.0-flash
+      - CHROMA_PERSIST_DIR=/app/backend/data/chroma
+      - REPOS_DIR=/app/backend/data/repos
+      - MAX_FILE_SIZE_KB=500
+      - TOP_K_RESULTS=10
+      - CHUNK_MAX_LINES=100
+    volumes:
+      - chroma_data:/app/backend/data/chroma
+      - repos_data:/app/backend/data/repos
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+  repos_data:
